@@ -1,0 +1,15 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {evaluatePhoto,insideFraction,yearbookBonus,rating} from '../src/scoring.js';
+const frame={x:100,y:100,width:200,height:133};
+const event={id:'jump',uid:'one',name:'Synchronized Jump',value:300,active:true,bounds:{x:165,y:140,width:70,height:50},caption:'Gravity left.',shots:0};
+test('a centered action rewards timing, framing, story and discovery',()=>{const p=evaluatePhoto(frame,[event],[]);assert.ok(p.points>=290);assert.equal(p.success,true);assert.ok(Object.values(p.breakdown).every(n=>n>0));});
+test('subjects outside the frame cannot score',()=>{assert.equal(evaluatePhoto(frame,[{...event,bounds:{x:600,y:400,width:70,height:50}}],[]).points,0);});
+test('clipped subjects get only 25 points, with no secret discovery',()=>{const p=evaluatePhoto(frame,[{...event,id:'sasquatch',bounds:{x:280,y:140,width:70,height:50}}],[]);assert.equal(p.points,25);assert.equal(p.success,false);assert.equal(p.secret,false);});
+test('a warning cue is not a successful action photo',()=>{const p=evaluatePhoto(frame,[{...event,active:false}],[]);assert.equal(p.success,false);assert.ok(p.points<100);});
+test('repeat shots earn less, new discoveries earn more',()=>{const first=evaluatePhoto(frame,[event],[]);const repeat=evaluatePhoto(frame,[{...event,shots:1}],[],new Set(['jump']));assert.ok(repeat.points<first.points/2);});
+test('ordinary visible people count; people outside the frame do not',()=>{assert.equal(evaluatePhoto(frame,[],[{x:200,y:200}]).points,35);assert.equal(evaluatePhoto(frame,[],[{x:700,y:400}]).points,0);});
+test('highest scoring visible event wins',()=>{const p=evaluatePhoto(frame,[event,{...event,id:'sasquatch',name:'Mysterious Sasquatch',value:650}],[]);assert.equal(p.eventId,'sasquatch');assert.equal(p.secret,true);});
+test('intersection is a fraction of subject area',()=>{assert.equal(insideFraction(frame,{x:290,y:150,width:20,height:20}),.5);});
+test('editor bonus rewards only chosen successful photos and is capped',()=>{assert.equal(yearbookBonus([{points:650,success:true},{points:300,success:true},{points:25,success:false}],[0,1,2]),120);});
+test('rating thresholds',()=>{assert.equal(rating(0),'Rookie Photographer');assert.equal(rating(750),'Hallway Reporter');assert.equal(rating(1500),'Photo Pro');assert.equal(rating(2500),'Yearbook Legend');});
