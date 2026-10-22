@@ -43,3 +43,55 @@ export function characterTexture(palette=0,frame=0,player=false){const canvas=do
  r(7,49,25,5,'#34564b44');r(12,34,7,15+step,pants);r(22,34,7,15-step,pants);r(10,47+step,10,4,'#283e49');r(21,47-step,11,4,'#283e49');r(10,21,20,17,player?'#e2b947':shirt);r(12,22,3,14,player?'#f2d16c':'#ffffff22');r(6,24,5,13-step,skin);r(30,24,5,13+step,skin);r(11,7,19,17,skin);r(10,7,20,7,hair);r(12,4,15,4,hair);r(9,11,4,7,hair);r(14,16,3,3,'#303c3e');r(24,16,3,3,'#303c3e');r(19,21,4,1,'#966c57');r(17,24,7,2,skin);
  if(player){r(9,6,23,5,'#f1ca4f');r(12,2,15,6,'#f1ca4f');r(28,7,8,3,'#d6a83c');r(24,26,4,11,'#364b4e');r(19,30,15,10,'#34434a');r(24,31,8,8,'#1d2f3b');r(26,33,4,4,'#85c4c4');r(20,28,5,3,'#d5e0c1');}else if(palette===6){r(17,25,3,11,'#c1b58c');r(16,26,5,3,'#dce0c4');r(10,8,21,3,'#d7b791');}
  return canvas;}
+
+// Courtyard at lunch: blue picnic tables, two timber benches, shade trees and a stone koi pond.
+export function makeCourtyard(){
+ const canvas=document.createElement('canvas');canvas.width=1000;canvas.height=520;const c=canvas.getContext('2d');c.imageSmoothingEnabled=false;
+ const r=(x,y,w,h,color)=>{c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),w,h);};
+ const text=(s,x,y,size=9,color='#345448')=>{c.font=`bold ${size}px monospace`;c.fillStyle=color;c.fillText(s,x,y);};
+ const oval=(x,y,w,h,color)=>{c.fillStyle=color;c.beginPath();c.ellipse(x,y,w/2,h/2,0,0,Math.PI*2);c.fill();};
+ r(0,0,1000,520,'#95b879');
+ for(let i=0;i<600;i++){const x=(i*149+23)%1000,y=90+(i*97)%430;r(x,y,2+(i%3)*2,2,i%3?'#85a96d':'#b3c58a');}
+ // Warm patio pavers and a curved footpath around the pond.
+ r(35,104,515,416,'#d9cba4');r(550,105,450,65,'#d9cba4');r(530,370,470,150,'#d9cba4');r(550,152,85,262,'#d9cba4');
+ for(let y=111;y<520;y+=27)for(let x=37;x<1000;x+=52){if(x<550||y>370||y<165||x<630){r(x+(y%54?0:25),y,48,1,'#c6b791');r(x+(y%54?0:25),y,1,26,'#c6b791');}}
+ r(30,103,5,417,'#6b8e65');r(35,103,515,5,'#b2b880');r(550,165,450,5,'#b2b880');
+ // Low school facade and cafeteria hatch establish the lunch setting.
+ r(0,0,1000,91,'#d7d9b7');r(0,0,1000,12,'#54736b');r(0,14,1000,4,'#ede4c1');r(0,79,1000,15,'#718f77');r(0,93,1000,7,'#e9d7a7');
+ for(let i=0;i<14;i++){r(12+i*73,23,57,46,'#517c77');r(16+i*73,27,49,37,'#a6d0c0');r(39+i*73,27,4,37,'#d4d6b1');r(16+i*73,43,49,3,'#d4d6b1');}
+ r(66,21,143,52,'#395e56');r(70,25,135,40,'#6d947c');r(61,66,153,8,'#b29163');text('CAFETERIA',89,40,12,'#f2e4b7');text('TODAY: MYSTERY + FRIES',77,56,7,'#d9d7a7');
+ r(338,28,218,33,'#ede2b4');text('ACE COURTYARD',361,43,13);text('LUNCH 12:15  /  SUNSHINE OPTIONAL',346,55,7);
+ // Tree shadows fall over both of the benches beside the water.
+ oval(633,209,210,49,'#567f5a32');oval(891,449,204,58,'#567f5a38');
+ function tree(x,y,scale=1){
+  r(x-9,y-78*scale,18,78*scale,'#7b674b');r(x-5,y-74*scale,4,72*scale,'#ac8857');r(x-18,y-9,38,9,'#668456');r(x-17,y-72*scale,9,20,'#7b674b');
+  const clusters=[[-44,-121,55,44],[-13,-148,64,52],[25,-124,60,46],[-60,-101,70,45],[-17,-114,75,60],[32,-92,55,38]];
+  for(let i=0;i<clusters.length;i++){const [dx,dy,w,h]=clusters[i];const xx=x+dx*scale,yy=y+dy*scale;r(xx,yy,w*scale,h*scale,['#3d7456','#51865b','#65995f','#4b8056','#679b62','#51855a'][i]);r(xx+7*scale,yy-5*scale,(w-14)*scale,7*scale,'#709e65');}
+  for(let i=0;i<55;i++){const dx=((i*31)%125-60)*scale,dy=(-138+(i*19)%80)*scale;r(x+dx,y+dy,6*scale,3*scale,i%3?'#83aa6a':'#3e7855');}
+ }
+ tree(611,170,1.05);tree(920,405,1.12);tree(15,330,.8);
+ // Stone rim: irregular pixels and a layered turquoise water surface.
+ oval(785,285,303,188,'#607e61');oval(785,280,293,178,'#b6b89a');oval(785,279,277,159,'#ded6ae');oval(785,280,258,143,'#3d827d');oval(784,277,246,128,'#6baca0');oval(774,265,202,98,'#7cbbab');
+ for(let i=0;i<35;i++){const a=i*Math.PI*2/35,x=785+Math.cos(a)*143,y=280+Math.sin(a)*82;r(x-7,y-3,14+(i%3)*2,7,i%2?'#c6c6a0':'#919e82');}
+ for(let i=0;i<19;i++){const x=690+(i*47)%180,y=234+(i*23)%87;if(((x-785)/105)**2+((y-280)/53)**2<1)r(x,y,9+(i%4)*3,2,i%2?'#b4d7ba':'#589a92');}
+ for(const [x,y] of [[698,261],[854,306],[831,239]]){oval(x,y,26,12,'#4a8c69');r(x,y-1,13,2,'#79aa70');r(x+5,y-9,5,7,'#f2d0aa');r(x+2,y-7,11,3,'#f5dfbc');}
+ // Reeds and wildflowers around the pond.
+ for(let i=0;i<11;i++){r(889+(i*5)%34,231-i%4*7,3,24+i%3*5,'#6c935e');r(889+(i*5)%34,228-i%4*7,4,6,'#947b4f');}
+ for(let i=0;i<30;i++){const x=652+(i*83)%307,y=344+(i*29)%18;r(x,y,2,6,'#6f925b');r(x-2,y-2,6,4,i%3?'#f1dc9b':'#d79b8b');}
+ function bench(x,y){oval(x+6,y+11,130,19,'#587b5430');r(x-57,y-27,114,6,'#b18c58');r(x-57,y-18,114,6,'#c49c65');r(x-53,y-30,4,36,'#6d6650');r(x+49,y-30,4,36,'#6d6650');r(x-62,y-5,124,8,'#caa16c');r(x-62,y+3,124,5,'#97744d');r(x-51,y+8,6,12,'#526552');r(x+45,y+8,6,12,'#526552');r(x-54,y-3,109,2,'#e0bd85');}
+ bench(615,187);bench(850,437);
+ // Four unmistakably blue picnic tables, with lunches and students sitting down.
+ function picnic(x,y){
+  oval(x+9,y+30,153,27,'#54765630');
+  // Seated students are behind the tabletop, with their legs beneath it.
+  c.drawImage(characterTexture((x+y)%7,0),x-44,y-39,30,42);c.drawImage(characterTexture((x+y+2)%7,0),x+19,y-39,30,42);
+  r(x-53,y+6,6,34,'#3e6669');r(x+47,y+6,6,34,'#3e6669');r(x-64,y+21,128,8,'#327bad');r(x-64,y+19,128,3,'#70b6d5');r(x-55,y+29,6,11,'#41686b');r(x+49,y+29,6,11,'#41686b');
+  r(x-70,y-7,140,27,'#2a6b9d');r(x-70,y-11,140,25,'#4c97c3');r(x-70,y-11,140,4,'#85c5df');for(let j=0;j<4;j++)r(x-67,y-3+j*5,134,1,'#377ea9');r(x-70,y+14,140,5,'#285e85');
+  oval(x-28,y+1,22,9,'#f0e1b9');r(x-32,y-4,13,6,'#d3a75f');r(x-30,y-6,9,3,'#77a066');r(x+22,y-9,8,14,'#f0dfb7');r(x+22,y-9,8,3,'#c16f5d');r(x+25,y-15,2,8,'#f2e8cd');r(x+40,y-4,13,11,'#b28459');
+ }
+ picnic(165,235);picnic(405,235);picnic(165,400);picnic(405,400);
+ r(688,375,71,20,'#dfd9ac');r(695,395,4,18,'#806b49');r(747,395,4,18,'#806b49');text('KOI QUIET ZONE',691,387,7);text('(THEY CANNOT READ)',688,407,6);
+ r(49,451,27,35,'#4b8579');r(46,447,33,7,'#39695f');text('RECYCLE',50,468,5,'#d8deaf');
+ text('SAVE A SEAT. FIND A STORY.',330,505,8,'#8f956e');
+ return canvas;
+}

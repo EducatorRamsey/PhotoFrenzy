@@ -4,7 +4,7 @@ export function insideFraction(frame, box) {
  const h=Math.max(0,Math.min(frame.y+frame.height,box.y+box.height)-Math.max(frame.y,box.y));
  return w*h/(box.width*box.height);
 }
-export function evaluatePhoto(frame, events, people, seen = new Set()) {
+export function evaluatePhoto(frame, events, people, seen = new Set(), context = {}) {
  let best=null;
  for(const e of events){
   const visible=insideFraction(frame,e.bounds);
@@ -19,12 +19,12 @@ export function evaluatePhoto(frame, events, people, seen = new Set()) {
   // Repeating the exact event instance is allowed, but rewards finding another moment.
   const factor=e.shots?0.4:1;
   const points=visible<.72?25:Math.round((timing+framing+story+creativity)*factor);
-  const result={points,event:e.name,eventId:e.id,instance:e.uid,caption:e.caption,secret:e.id==='sasquatch'&&e.active&&visible>=.72,success:e.active&&visible>=.72,feedback:visible<.72?'SUBJECT CUT OFF!':!e.active?'A LITTLE EARLY!':e.shots?'ANOTHER TAKE!':e.id==='bomb'?'AWESOME PHOTOBOMB!':e.id==='sasquatch'?'WAIT. IS THAT SASQUATCH?!':'GREAT SHOT!',breakdown:{timing,framing,story,creativity}};
+  const result={points,event:e.name,eventId:e.id,instance:e.uid,caption:e.caption,secret:(e.secret||e.id==='sasquatch')&&e.active&&visible>=.72,success:e.active&&visible>=.72,feedback:visible<.72?'SUBJECT CUT OFF!':!e.active?'A LITTLE EARLY!':e.shots?'ANOTHER TAKE!':e.feedback|| (e.id==='bomb'?'AWESOME PHOTOBOMB!':e.id==='sasquatch'?'WAIT. IS THAT SASQUATCH?!':'GREAT SHOT!'),breakdown:{timing,framing,story,creativity}};
   if(!best||result.points>best.points)best=result;
  }
  if(best)return best;
  const subject=people.find(p=>insideFraction(frame,{x:p.x-12,y:p.y-44,width:24,height:44})>.85);
- return {points:subject?35:0,event:subject?'Hallway Portrait':'Empty Hallway',eventId:subject?'portrait':'miss',caption:subject?'This was definitely their good side.':'A stunning study of absolutely nothing happening.',success:!!subject,secret:false,feedback:subject?'NICE PORTRAIT!':'YOU MISSED IT!',breakdown:{timing:0,framing:subject?20:0,story:subject?15:0,creativity:0}};
+ return {points:subject?35:0,event:subject?(context.portraitName||'Hallway Portrait'):(context.emptyName||'Empty Hallway'),eventId:subject?'portrait':'miss',caption:subject?'This was definitely their good side.':'A stunning study of absolutely nothing happening.',success:!!subject,secret:false,feedback:subject?'NICE PORTRAIT!':'YOU MISSED IT!',breakdown:{timing:0,framing:subject?20:0,story:subject?15:0,creativity:0}};
 }
 export function yearbookBonus(photos, selected){return selected.reduce((total,index)=>total+(photos[index]?.success?Math.min(75,Math.round(photos[index].points*.15)):0),0);}
 export function rating(score){return score>=2500?'Yearbook Legend':score>=1500?'Photo Pro':score>=750?'Hallway Reporter':'Rookie Photographer';}

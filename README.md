@@ -1,6 +1,6 @@
 # ACE Media: Photo Frenzy
 
-A complete, browser-based Phaser 3 arcade photography game. You are ACE Media's student photographer during a fictional ACE Leadership High School passing period. Chase unpredictable moments, capture actual game scenes, and choose your three best photographs for the yearbook.
+A complete, browser-based Phaser 3 arcade photography game. You are ACE Media's student photographer through a fictional ACE Leadership High School day: passing period in the hallway, then lunch in the outdoor courtyard. Chase unpredictable moments, capture actual game scenes, and choose your best photographs for the yearbook.
 
 ## Play in your browser
 
@@ -36,6 +36,27 @@ Use a static HTTP server: opening `index.html` as a `file://` URL can block Java
 | Sound button | Mute / unmute effects |
 
 The camera reaches 315 game pixels from the photographer. Walk toward distant events. The player wears a yellow cap and has a **YOU** label. Menu and album screens pause the timer; switching tabs or leaving the browser window also pauses automatically.
+
+## Two connected assignments
+
+Start in **Hallway Havoc**. Once the first 12 photographs are taken (or the timer expires), the editor’s desk opens. Review the photos, optionally choose yearbook picks, then click **NEXT: LUNCHTIME LENS**. Every score can advance; the target is not an unlock requirement.
+
+Level two gives you a new 12-photo roll and 90 seconds. Your hallway photos remain available in the album under **Earlier assignment**, and your hallway score plus any editor bonus carries into the school-day total. Each level’s HUD shows its own score and 1,500-point target. Restarting the current level preserves an already completed first assignment; **Play from Level 1** starts a fresh school day. A full run offers 24 photographs.
+
+## Lunchtime Lens · level two
+
+The sunny courtyard features **four blue picnic tables**, student lunches, **a koi pond**, and **two wooden benches under shade trees**. Koi swim and ripples move even between events. Walk around the tables, benches, and pond; you cannot walk through the water.
+
+Six original outdoor moments have their own cues, animated bounds, photo scoring, and captions:
+
+- **Koi Cannonball:** photograph an orange-and-white koi while it leaps above the pond.
+- **Sandwich Snatch:** catch a bird flying away with a student’s sandwich.
+- **Lunch Tray Toast:** frame two students raising their lunch cartons.
+- **Snack Bandit:** photograph a squirrel carrying off a cookie.
+- **Leaf Confetti:** capture students under a gust of swirling leaves.
+- **The Golden Koi:** a rare secret pond visitor. Investigate the pond with **E** to draw it out once per round, or watch for a random appearance.
+
+Choose three photos from the outdoor roll for another editor bonus. The final album also includes the actual first-level photographs. Personal high scores record the combined school-day score, photographs taken, and number of completed levels; older one-level scores remain readable.
 
 ## Hallway Havoc
 
@@ -75,21 +96,24 @@ styles.css                Responsive arcade shell and photo album
 src/
   levels.js               Level configuration and six event definitions
   art.js                  Original procedural pixel environment and sprites
-  game.js                 Phaser scene, input, events, animation, capture
+  game.js                 Shared Phaser scene, input, level setup and capture
+  courtyard.js            Outdoor event animations and swimming koi
+  world.js                Pond, table and bench collision geometry
   scoring.js              Bounds-based evaluation, editor bonus and ratings
   audio.js                Original Web Audio effects
   app.js                  Menus, HUD, album, yearbook selection, local scores
 assets/vendor/
   phaser.min.js           Phaser 3.90.0, bundled for offline runtime use
   PHASER-LICENSE.md       Phaser MIT license
- tests/scoring.test.js    Scoring and curation regression checks
+tests/scoring.test.js     Scoring and curation regression checks
+tests/courtyard.test.js   Level configuration, collision and outdoor scoring checks
 ```
 
-Major systems are commented in source. Future levels can supply new configuration and event definitions in `levels.js`, a new environment in `art.js`, and scene event handlers in `game.js`. Additional levels are intentionally not implemented.
+Major systems are commented in source. Future levels can supply new configuration and event definitions in `levels.js`, a new environment in `art.js`, and scene event handlers in `game.js`. Two levels are implemented: Hallway Havoc and Lunchtime Lens. Future levels can add to the `LEVELS` array and supply a new art generator and event renderer.
 
 ## Validation
 
-Run `npm test` for scoring regressions and `npm run check` for JavaScript syntax. No project dependencies are needed. Browser QA covers startup, movement, pointer and keyboard aiming, actual image capture, all six event hit regions, album pause/resume, film and timer exhaustion, yearbook curation, score persistence, restarting, and narrow layouts.
+Run `npm test` for scoring regressions and `npm run check` for JavaScript syntax. No project dependencies are needed. Browser QA covers startup, movement, pointer and keyboard aiming, actual image capture, all twelve event hit regions, the twelve-shot transition to the courtyard, preserved first-level photos and scores, pond and table collisions, album pause/resume, film and timer exhaustion, yearbook curation, score persistence, restarting, and narrow layouts.
 
 A desktop keyboard and mouse/trackpad are the primary controls. Touch movement is not included. Phaser uses the Canvas renderer at a fixed 1000×520 game resolution with pixel rendering and lightweight generated art, intended for school Chromebooks. No camera hardware or webcam permission is requested.
 
