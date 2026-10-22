@@ -2,6 +2,14 @@
 
 A complete, browser-based Phaser 3 arcade photography game. You are ACE Media's student photographer during a fictional ACE Leadership High School passing period. Chase unpredictable moments, capture actual game scenes, and choose your three best photographs for the yearbook.
 
+## Play in your browser
+
+**[▶ PLAY PHOTO FRENZY](https://educatorramsey.github.io/PhotoFrenzy/)**
+
+This is the game website; the GitHub repository holds its source code. Click **LET’S SHOOT** once the game loads. No download or account is needed.
+
+If the website is not available yet, open [Settings → Pages](https://github.com/EducatorRamsey/PhotoFrenzy/settings/pages) and set **Source → GitHub Actions**. Then open [Actions → Publish playable game](https://github.com/EducatorRamsey/PhotoFrenzy/actions/workflows/pages.yml) and check the latest run, or choose **Run workflow → main → Run workflow**. The website becomes available after the deployment succeeds.
+
 ## Play locally
 
 No build, account, API key, package install, or backend is required. Phaser 3.90.0 is bundled locally.
@@ -47,15 +55,17 @@ The top ten personal attempts are stored in `localStorage` under `ace-photo-fren
 
 ## Deploy to GitHub Pages
 
-This is a static site with relative paths, so it works at both a root domain and a repository subpath.
+This is a static site with relative paths, so it works at both a root domain and a repository subpath. The included `.github/workflows/pages.yml` checks the game and publishes its static assets on every push to `main`.
 
-1. Add the project files to a GitHub repository, keeping `index.html` in the repository root.
-2. Push the files to the repository's default branch.
-3. Open **Settings → Pages → Build and deployment**.
-4. Choose **Deploy from a branch**, select your branch and **/(root)**, then **Save**.
-5. Open the Pages URL shown by GitHub after deployment completes (usually `https://USERNAME.github.io/REPOSITORY/`).
+1. Keep the project files in the repository root, including `index.html`, `src`, and `assets`.
+2. Open **Settings → Pages → Build and deployment**.
+3. Set **Source** to **GitHub Actions**.
+4. Push a commit to `main`, or open **Actions → Publish playable game → Run workflow** and select `main`.
+5. Wait for the run to finish successfully, then open **https://educatorramsey.github.io/PhotoFrenzy/**. The run's `github-pages` environment also links to the deployed website.
 
-The `.nojekyll` file disables Jekyll processing. Keep the `assets/vendor` folder: it contains the local Phaser runtime. `.openai/hosting.json` is optional Sites hosting metadata and is not needed by GitHub Pages. No npm build or GitHub Action is required.
+For a copy of this repository, update the Play link to your own `https://USERNAME.github.io/REPOSITORY/` URL.
+
+As an alternative to the workflow, select **Deploy from a branch → main → /(root) → Save** in Pages settings. The project does not require a build. The `.nojekyll` file disables Jekyll processing. Keep `assets/vendor`, which contains the local Phaser runtime. `.openai/hosting.json` is optional Sites metadata and is not needed by GitHub Pages.
 
 ## Project structure
 
